@@ -5,6 +5,8 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
 import numpy as np
+import google.auth
+from google.auth.transport.requests import Request
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -15,14 +17,18 @@ MODEL_PATH = "models/xray_model.h5"
 # Direct download link from Google Drive (replace with your actual file ID)
 MODEL_URL = "https://drive.google.com/uc?export=download&id=1sth_LGZYfe7Gpc5TYmKP0nsWoZ27PHo3"
 
+# Function to download the model if it doesn't exist locally
+def download_model():
+    if not os.path.exists(MODEL_PATH):
+        os.makedirs("models", exist_ok=True)  # Create models folder if it doesn't exist
+        print("Downloading model from Google Drive...")
+        response = requests.get(MODEL_URL)
+        with open(MODEL_PATH, "wb") as model_file:
+            model_file.write(response.content)
+        print("Model downloaded successfully.")
+
 # Check if the model exists in the models folder, if not, download it
-if not os.path.exists(MODEL_PATH):
-    os.makedirs("models", exist_ok=True)  # Create models folder if it doesn't exist
-    print("Downloading model from Google Drive...")
-    response = requests.get(MODEL_URL)
-    with open(MODEL_PATH, "wb") as model_file:
-        model_file.write(response.content)
-    print("Model downloaded successfully.")
+download_model()
 
 # Load the model
 model = load_model(MODEL_PATH)
@@ -58,4 +64,5 @@ def predict():
 
 # Optional: only needed for local testing
 if __name__ == '__main__':
+    # Use port 10000 for Render deployment
     app.run(host='0.0.0.0', port=10000)
