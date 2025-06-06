@@ -44,13 +44,7 @@ def predict():
     except Exception as e:
         return jsonify(error=str(e)), 500
 
-# Local testing (Flask Development Server for Windows)
+# For Render deployment (Flask Development Server)
 if __name__ == '__main__':
-    # For Windows, use Flask development server
-    port = int(os.environ.get("PORT", 10000))  # Use the Render-provided port or 10000 for local testing
-    app.run(host='0.0.0.0', port=port, debug=True)
-
-# Optional: For production on Windows, use Waitress
-# from waitress import serve
-# if __name__ == '__main__':
-#     serve(app, host='0.0.0.0', port=10000)
+    port = int(os.environ.get("PORT", 10000))  # Render will provide the PORT environment variable
+    app.run(host='0.0.0.0', port=port, debug=True)  # Ensure Flask runs on the correct port
