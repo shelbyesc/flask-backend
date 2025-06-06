@@ -4,10 +4,6 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
 import numpy as np
-import tensorflow as tf
-
-# Disable GPU in TensorFlow if it's not available or not needed
-tf.config.set_visible_devices([], 'GPU')  # Disable GPU
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -48,6 +44,13 @@ def predict():
     except Exception as e:
         return jsonify(error=str(e)), 500
 
-# Optional: only needed for local testing
+# Local testing (Flask Development Server for Windows)
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)  # Explicitly specify port 10000 for Render
+    # For Windows, use Flask development server
+    port = int(os.environ.get("PORT", 10000))  # Use the Render-provided port or 10000 for local testing
+    app.run(host='0.0.0.0', port=port, debug=True)
+
+# Optional: For production on Windows, use Waitress
+# from waitress import serve
+# if __name__ == '__main__':
+#     serve(app, host='0.0.0.0', port=10000)
