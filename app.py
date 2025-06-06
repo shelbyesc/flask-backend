@@ -4,6 +4,10 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
 import numpy as np
+import tensorflow as tf
+
+# Disable GPU in TensorFlow if it's not available or not needed
+tf.config.set_visible_devices([], 'GPU')  # Disable GPU
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -46,5 +50,4 @@ def predict():
 
 # Optional: only needed for local testing
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))  # Use the dynamic port provided by Render, fallback to 5000
-    app.run(host='0.0.0.0', port=port)  # Run the app on the correct port
+    app.run(host='0.0.0.0', port=10000)  # Explicitly specify port 10000 for Render
